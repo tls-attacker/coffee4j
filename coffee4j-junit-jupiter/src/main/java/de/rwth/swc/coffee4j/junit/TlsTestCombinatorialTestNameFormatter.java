@@ -1,13 +1,20 @@
 package de.rwth.swc.coffee4j.junit;
 
+import de.rub.nds.tlstest.framework.model.DerivationContainer;
+import de.rub.nds.tlstest.framework.model.derivationParameter.DerivationParameter;
+import de.rwth.swc.coffee4j.junit.CombinatorialTest;
+import de.rwth.swc.coffee4j.junit.CombinatorialTestNameFormatter;
 import de.rwth.swc.coffee4j.model.Combination;
 import de.rwth.swc.coffee4j.model.Parameter;
 import de.rwth.swc.coffee4j.model.Value;
+import java.util.LinkedList;
+import java.util.List;
 import org.junit.platform.commons.util.StringUtils;
 
 import java.util.Map;
 
 /**
+ * This is a modified copy of coffee4j's CombinatorialTestNameFormatter.
  * Formats the name of one test input in a {@link CombinatorialTest} according to the name defined in
  * {@link CombinatorialTest#name()}, the currently tested {@link Combination}, and the test index.
  * <p>
@@ -20,19 +27,24 @@ import java.util.Map;
  * This class is more a less a copy of {@link org.junit.jupiter.params.ParameterizedTestNameFormatter} from the
  * junit-jupiter-params project.
  */
-class CombinatorialTestNameFormatter {
-    
-    protected final String namePattern;
+public class TlsTestCombinatorialTestNameFormatter extends CombinatorialTestNameFormatter {
 
-    CombinatorialTestNameFormatter(String namePattern) {
-        this.namePattern = namePattern;
+
+    public TlsTestCombinatorialTestNameFormatter(String namePattern) {
+        super(namePattern);
     }
-    
-    String format(int invocationIndex, Combination testInput) {
+
+    @Override
+    public String format(int invocationIndex, Combination testInput) {
         final String invocationIndexReplacedPattern = replaceInvocationIndex(namePattern, invocationIndex);
         final String parameterNamesReplacedPattern = replaceParameterNamesWithValues(invocationIndexReplacedPattern, testInput);
         
         return replaceCombinations(parameterNamesReplacedPattern, testInput);
+    }
+
+    public String format(int invocationIndex, List<DerivationParameter> testInput) {
+        final String invocationIndexReplacedPattern = replaceInvocationIndex(namePattern, invocationIndex);
+        return replaceCombinations(invocationIndexReplacedPattern, testInput);
     }
     
     private String replaceInvocationIndex(String patter, int invocationIndex) {
@@ -50,7 +62,11 @@ class CombinatorialTestNameFormatter {
     }
     
     private String replaceCombinations(String pattern, Combination testInput) {
-        return pattern.replace("{combination}", testInput.toString());
+        return pattern.replace("{combination}", DerivationContainer.fromCombination(testInput).toString());
+    }
+    
+    private String replaceCombinations(String pattern, List<DerivationParameter> testInput) {
+        return pattern.replace("{combination}", new DerivationContainer(new LinkedList<>(testInput)).toString());
     }
     
 }
