@@ -12,10 +12,7 @@ import de.rwth.swc.coffee4j.model.constraints.Constraint;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -85,9 +82,11 @@ public class IndexBasedModelConverter implements ModelConverter {
         for (int i = 0; i < allConstraints.size(); i++) {
             final Constraint constraint = allConstraints.get(i);
             final TupleList tupleList = correspondingTupleLists.get(i);
-            
-            constraintToTuplesListMap.put(constraint, tupleList);
-            tuplesListToConstraintMap.put(tupleList, constraint);
+
+            if (tupleList != null) {
+                constraintToTuplesListMap.put(constraint, tupleList);
+                tuplesListToConstraintMap.put(tupleList, constraint);
+            }
         }
     }
     
@@ -101,9 +100,11 @@ public class IndexBasedModelConverter implements ModelConverter {
                 parameterSizes,
                 model.getExclusionConstraints().stream()
                         .map(constraintToTuplesListMap::get)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList()),
                 model.getErrorConstraints().stream()
                         .map(constraintToTuplesListMap::get)
+                        .filter(Objects::nonNull)
                         .collect(Collectors.toList()));
     }
     
