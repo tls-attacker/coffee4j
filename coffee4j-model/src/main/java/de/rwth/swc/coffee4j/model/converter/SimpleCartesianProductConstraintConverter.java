@@ -89,8 +89,12 @@ public class SimpleCartesianProductConstraintConverter implements IndexBasedCons
                 tuples.add(tuple);
             }
         }
-        
-        return new TupleList(id, relevantParameters, tuples, constraint.getConstraintStatus().equals(ConstraintStatus.CORRECT));
+
+        if (tuples.isEmpty()) {
+            return null;
+        } else {
+            return new TupleList(id, relevantParameters, tuples, constraint.getConstraintStatus().equals(ConstraintStatus.CORRECT));
+        }
     }
     
     private Int2IntMap computeSizeMap(Int2ObjectMap<Parameter> idToParameterMap, int[] relevantKeys) {
