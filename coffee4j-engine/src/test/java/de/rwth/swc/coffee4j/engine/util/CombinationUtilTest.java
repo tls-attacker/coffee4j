@@ -65,7 +65,7 @@ class CombinationUtilTest {
     @MethodSource
     void canBeAddedTests(int[] combination, int[] toBeAdded, boolean constraintSolverResult, boolean expectedResult) {
         final ConstraintChecker solver = Mockito.mock(ConstraintChecker.class);
-        when(solver.isExtensionValid(any(), any())).thenReturn(constraintSolverResult);
+        when(solver.isExtensionValid(any(int[].class), any(int[].class))).thenReturn(constraintSolverResult);
         
         Assertions.assertEquals(expectedResult, CombinationUtil.canBeAdded(combination, toBeAdded, solver));
     }
