@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>de.rub.nds</groupId>
+        <artifactId>protocol-toolkit-bom</artifactId>
+        <version>5.0.0</version>
+    </parent>
 
     <groupId>de.rub.nds.tls</groupId>
     <artifactId>coffee4j-anvil-aggregate</artifactId>
-    <packaging>pom</packaging>
     <version>1.2.1-SNAPSHOT</version>
-
-    <modules>
-        <module>coffee4j-model</module>
-        <module>coffee4j-engine</module>
-        <module>coffee4j-junit-jupiter</module>
-    </modules>
+    <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
     <description>coffee4j is a framework that integrates combinatorial test generation and automated test execution via JUnit5</description>
     <url>https://coffee4j.github.io</url>
+
+    <licenses>
+        <license>
+            <name>Eclipse Public License, Version 2.0</name>
+            <url>http://www.eclipse.org/legal/epl-v20.html</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
 
     <developers>
         <developer>
@@ -27,13 +33,11 @@
         </developer>
     </developers>
 
-    <licenses>
-        <license>
-            <name>Eclipse Public License, Version 2.0</name>
-            <url>http://www.eclipse.org/legal/epl-v20.html</url>
-            <distribution>repo</distribution>
-        </license>
-    </licenses>
+    <modules>
+        <module>coffee4j-engine</module>
+        <module>coffee4j-junit-jupiter</module>
+        <module>coffee4j-model</module>
+    </modules>
 
     <scm>
         <connection>scm:git:https://github.com/tls-attacker/coffee4j.git</connection>
@@ -43,46 +47,36 @@
     </scm>
 
     <distributionManagement>
-        <snapshotRepository>
-            <id>ossrh</id>
-            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-        </snapshotRepository>
         <repository>
             <id>ossrh</id>
             <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
         </repository>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
     </distributionManagement>
 
     <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
-        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <main.basedir>${project.basedir}</main.basedir>
+        <!-- The following variables are required for Jenkins CI -->
+        <skipTests>false</skipTests>
+        <skip.surefire.tests>${skipTests}</skip.surefire.tests>
+        <skip.failsafe.tests>${skipTests}</skip.failsafe.tests>
+        <!-- Variables from upstream -->
         <slf4j.version>2.0.16</slf4j.version>
-        <junit-jupiter.version>5.11.4</junit-jupiter.version>
-        <junit-platform.version>1.11.4</junit-platform.version>
-        <mockito.version>5.15.2</mockito.version>
         <choco-solver.version>4.10.18</choco-solver.version>
         <fastutil.version>8.5.15</fastutil.version>
-        <commons-lang3.version>3.17.0</commons-lang3.version>
-        <surefire-plugin.version>3.5.2</surefire-plugin.version>
-        <jacoco-plugin.version>0.8.12</jacoco-plugin.version>
-        <javadoc-plugin.version>3.11.2</javadoc-plugin.version>
-        <source-plugin.version>3.3.1</source-plugin.version>
-        <nexus-staging-plugin.version>1.7.0</nexus-staging-plugin.version>
-        <gpg-plugin.version>3.2.7</gpg-plugin.version>
-        <dependency-plugin.version>3.8.1</dependency-plugin.version>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
-        <skip.signature>true</skip.signature>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <!-- INTRA PROJECT  DEPENDENCIES -->
-            <dependency>
-                <groupId>de.rub.nds.tls</groupId>
-                <artifactId>coffee4j-anvil-model</artifactId>
-                <version>${project.version}</version>
-            </dependency>
             <dependency>
                 <groupId>de.rub.nds.tls</groupId>
                 <artifactId>coffee4j-anvil-engine</artifactId>
@@ -92,6 +86,23 @@
                 <groupId>de.rub.nds.tls</groupId>
                 <artifactId>coffee4j-anvil-junit-jupiter</artifactId>
                 <version>${project.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>de.rub.nds.tls</groupId>
+                <artifactId>coffee4j-anvil-model</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <!-- OTHER DEPENDENCIES -->
+            <dependency>
+                <groupId>it.unimi.dsi</groupId>
+                <artifactId>fastutil</artifactId>
+                <version>${fastutil.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.choco-solver</groupId>
+                <artifactId>choco-solver</artifactId>
+                <version>${choco-solver.version}</version>
             </dependency>
 
             <!-- LOGGING DEPENDENCIES -->
@@ -105,68 +116,75 @@
                 <artifactId>slf4j-simple</artifactId>
                 <version>${slf4j.version}</version>
             </dependency>
-            <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-lang3</artifactId>
-                <version>${commons-lang3.version}</version>
-            </dependency>
-
-            <!-- OTHER DEPENDENCIES -->
-            <dependency>
-                <groupId>org.choco-solver</groupId>
-                <artifactId>choco-solver</artifactId>
-                <version>${choco-solver.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>it.unimi.dsi</groupId>
-                <artifactId>fastutil</artifactId>
-                <version>${fastutil.version}</version>
-            </dependency>
-
-            <!-- TEST FRAMEWORK DEPENDENCIES -->
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-api</artifactId>
-                <version>${junit-jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-params</artifactId>
-                <version>${junit-jupiter.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.platform</groupId>
-                <artifactId>junit-platform-commons</artifactId>
-                <version>${junit-platform.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.junit.jupiter</groupId>
-                <artifactId>junit-jupiter-engine</artifactId>
-                <version>${junit-jupiter.version}</version>
-                <scope>test</scope>
-            </dependency>
-            <dependency>
-                <groupId>org.mockito</groupId>
-                <artifactId>mockito-core</artifactId>
-                <version>${mockito.version}</version>
-            </dependency>
         </dependencies>
     </dependencyManagement>
 
     <build>
         <pluginManagement>
             <plugins>
+                <!--################# default lifecycle plugins #################-->
+                <!-- Plugin to compile source files -->
+                <!-- Compile source files -->
                 <plugin>
-                    <groupId>org.sonarsource.scanner.maven</groupId>
-                    <artifactId>sonar-maven-plugin</artifactId>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <target>${maven.compiler.target}</target>
+                        <compilerArgs>
+                            <compilerArg>-proc:full</compilerArg>
+                        </compilerArgs>
+                    </configuration>
+                </plugin>
+                <!-- Plugin to execute unit tests -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <configuration>
+                        <properties>
+                            <configurationParameters>junit.jupiter.execution.parallel.enabled = false</configurationParameters>
+                        </properties>
+                        <skipTests>${skip.surefire.tests}</skipTests>
+                    </configuration>
+                </plugin>
+                <!-- Plugin to compile javadoc -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <configuration>
+                        <source>${maven.compiler.source}</source>
+                        <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                    </configuration>
+                    <executions>
+                        <execution>
+                            <id>attach-javadocs</id>
+                            <goals>
+                                <goal>jar</goal>
+                            </goals>
+                        </execution>
+                    </executions>
+                </plugin>
+                <!-- Pack source files to jar archive -->
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-source-plugin</artifactId>
+                    <executions>
+                        <execution>
+                            <id>attach-sources</id>
+                            <goals>
+                                <goal>jar-no-fork</goal>
+                            </goals>
+                        </execution>
+                    </executions>
                 </plugin>
             </plugins>
         </pluginManagement>
         <plugins>
+            <!--################# default lifecycle plugins #################-->
+            <!-- JaCoCo code coverage -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
-                <version>${jacoco-plugin.version}</version>
                 <configuration>
                     <destFile>${sonar.jacoco.reportPath}</destFile>
                     <append>true</append>
@@ -180,63 +198,42 @@
                     </execution>
                 </executions>
             </plugin>
+            <!-- Flatten pom.xml before install / deploy phases -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>${javadoc-plugin.version}</version>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
                 <configuration>
-                    <source>${maven.compiler.source}</source>
-                    <javadocExecutable>${java.home}/bin/javadoc</javadocExecutable>
+                    <flattenMode>ossrh</flattenMode>
                 </configuration>
                 <executions>
                     <execution>
-                        <id>attach-javadocs</id>
+                        <id>flatten-clean</id>
                         <goals>
-                            <goal>jar</goal>
+                            <goal>clean</goal>
                         </goals>
+                        <phase>clean</phase>
                     </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-gpg-plugin</artifactId>
-                <version>${gpg-plugin.version}</version>
-                <configuration>
-                    <skip>${skip.signature}</skip>
-                </configuration>
-                <executions>
                     <execution>
-                        <id>sign-artifacts</id>
+                        <id>flatten</id>
                         <goals>
-                            <goal>sign</goal>
+                            <goal>flatten</goal>
                         </goals>
+                        <phase>process-resources</phase>
                     </execution>
                 </executions>
             </plugin>
+            <!--############ plugins without lifecycle bindings #############-->
+            <!-- Static code analysis -->
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>${surefire-plugin.version}</version>
+                <groupId>com.github.spotbugs</groupId>
+                <artifactId>spotbugs-maven-plugin</artifactId>
                 <configuration>
-                    <properties>
-                        <configurationParameters>
-                            junit.jupiter.execution.parallel.enabled = false
-                        </configurationParameters>
-                    </properties>
+                    <excludeFilterFile>${main.basedir}/resources/spotbugs.xml</excludeFilterFile>
                 </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-source-plugin</artifactId>
-                <version>${source-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>attach-sources</id>
-                        <goals>
-                            <goal>jar-no-fork</goal>
-                        </goals>
-                    </execution>
-                </executions>
+                <artifactId>maven-pmd-plugin</artifactId>
             </plugin>
         </plugins>
     </build>
