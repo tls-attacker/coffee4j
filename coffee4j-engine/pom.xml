@@ -5,7 +5,7 @@
     <parent>
         <groupId>de.rub.nds.tls</groupId>
         <artifactId>coffee4j-anvil-aggregate</artifactId>
-        <version>2.0.0</version>
+        <version>2.0.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>coffee4j-anvil-engine</artifactId>
