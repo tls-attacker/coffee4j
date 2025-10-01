@@ -59,7 +59,7 @@
         <!-- Variables from upstream -->
         <slf4j.version>2.0.17</slf4j.version>
         <choco-solver.version>4.10.18</choco-solver.version>
-        <fastutil.version>8.5.16</fastutil.version>
+        <fastutil.version>8.5.17</fastutil.version>
         <sonar.jacoco.reportPath>${project.basedir}/../target/jacoco.exec</sonar.jacoco.reportPath>
     </properties>
 
